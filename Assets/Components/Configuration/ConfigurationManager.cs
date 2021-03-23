@@ -49,4 +49,9 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// The radius of each acidic region
     /// </summary>
     public int Conatiner_Sphere_Radius = 20;
+
+    /// <summary>
+    /// The number of worker ants to spawn 
+    /// </summary>
+    public int Number_Of_Workers = 12;
 }

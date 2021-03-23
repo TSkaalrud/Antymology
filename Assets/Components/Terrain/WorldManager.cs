@@ -12,12 +12,7 @@ namespace Antymology.Terrain
         #region Fields
 
         /// <summary>
-        /// The prefab containing the ant.
-        /// </summary>
-        public GameObject antPrefab;
-
-        /// <summary>
-        /// The material used for eech block.
+        /// The material used for each block.
         /// </summary>
         public Material blockMaterial;
 
@@ -40,6 +35,24 @@ namespace Antymology.Terrain
         /// Random number generator.
         /// </summary>
         private SimplexNoise SimplexNoise;
+
+        /// <summary>
+        /// The prefab containing the ant.
+        /// </summary>
+        public GameObject queenPrefab;
+        public GameObject workerPrefab;
+
+        /// <summary>
+        /// The list of worker ants.
+        /// </summary>
+        public List<Worker_M> workers;
+
+        /// <summary>
+        /// The manager for the queen ant.
+        /// </summary>
+        public Queen_M queen;
+        
+
 
         #endregion
 
@@ -88,7 +101,53 @@ namespace Antymology.Terrain
         /// </summary>
         private void GenerateAnts()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            GenerateQueen();
+            GenerateWorkers(ConfigurationManager.Instance.Number_Of_Workers);
+        }
+
+        private void GenerateQueen()
+        {
+            Vector3 spawnLocation = getAirBlock(RNG.Next(1, Blocks.GetLength(0) - 1), RNG.Next(1, Blocks.GetLength(2) - 1));
+            GameObject queenie = Instantiate(queenPrefab, spawnLocation, Quaternion.identity);
+            Queen_M queenScript = queenie.GetComponent<Queen_M>();
+            queen = queenScript;
+
+        }
+
+        private void GenerateWorkers(int Number_Of_Workers)
+        {
+            if (workers == null) workers = new List<Worker_M>();
+            for (int i = 0; i < Number_Of_Workers; i++)
+            {
+                Vector3 spawnLocation = getAirBlock(RNG.Next(1, Blocks.GetLength(0) - 1), RNG.Next(1, Blocks.GetLength(2) - 1));
+                GameObject workerBro = Instantiate(workerPrefab, spawnLocation, Quaternion.identity);
+                Worker_M workerScript = workerBro.GetComponent<Worker_M>();
+                workers.Add(workerScript);
+
+            }
+        }
+
+        /// <summary>
+        /// Gets the first (lowest y) air block in a given x/z coordinate 
+        /// </summary>
+        /// <param name="xCoord"></param>
+        /// <param name="zCoord"></param>
+        /// <returns></returns>
+        private Vector3 getAirBlock(int xCoord, int zCoord)
+        {
+            Vector3 r = new Vector3(0,0,0);
+            for (int i = 1; i < Blocks.GetLength(1); i++)
+            {
+                if (GetBlock(xCoord, i, zCoord).GetType().Name == "AirBlock")
+                {
+                    int yCoord = i;
+                    //print(xCoord + " " + yCoord + " " + zCoord);
+                    r = new Vector3(xCoord, i, zCoord);
+                    break;
+                }
+            }
+            return r;
         }
 
         #endregion
