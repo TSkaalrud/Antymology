@@ -29,7 +29,7 @@ namespace Antymology.Terrain
         /// <summary>
         /// Random number generator.
         /// </summary>
-        private System.Random RNG;
+        public System.Random RNG;
 
         /// <summary>
         /// Random number generator.
@@ -134,7 +134,7 @@ namespace Antymology.Terrain
         /// <param name="xCoord"></param>
         /// <param name="zCoord"></param>
         /// <returns></returns>
-        private Vector3 getAirBlock(int xCoord, int zCoord)
+        public Vector3 getAirBlock(int xCoord, int zCoord)
         {
             Vector3 r = new Vector3(0,0,0);
             for (int i = 1; i < Blocks.GetLength(1); i++)
