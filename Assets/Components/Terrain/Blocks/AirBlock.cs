@@ -24,7 +24,7 @@ namespace Antymology.Terrain
         /// A dictionary representing the phermone deposits in the air. Each type of phermone gets it's own byte key, and each phermone type has a concentration.
         /// THIS CURRENTLY ONLY EXISTS AS A WAY OF SHOWING YOU HOW YOU CAN MANIPULATE THE BLOCKS.
         /// </summary>
-        private Dictionary<byte, double> phermoneDeposits;
+        public Dictionary<byte, double> phermoneDeposits;
 
         #endregion
 
