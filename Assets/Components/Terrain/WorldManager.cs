@@ -19,7 +19,7 @@ namespace Antymology.Terrain
         /// <summary>
         /// The raw data of the underlying world structure.
         /// </summary>
-        private AbstractBlock[,,] Blocks;
+        public AbstractBlock[,,] Blocks;
 
         /// <summary>
         /// Reference to the geometry data of the chunks.
@@ -89,11 +89,27 @@ namespace Antymology.Terrain
         {
             GenerateData();
             GenerateChunks();
-
+            ApplyCoordinates();
             Camera.main.transform.position = new Vector3(0 / 2, Blocks.GetLength(1), 0);
             Camera.main.transform.LookAt(new Vector3(Blocks.GetLength(0), 0, Blocks.GetLength(2)));
 
             GenerateAnts();
+        }
+
+        private void ApplyCoordinates()
+        {
+            for (int x = 0; x < Blocks.GetLength(0); x++)
+            {
+                for (int y = 0; y < Blocks.GetLength(1); y++)
+                {
+                    for (int z = 0; z < Blocks.GetLength(2); z++)
+                    {
+                        Blocks[x, y, z].worldXCoordinate = x;
+                        Blocks[x, y, z].worldYCoordinate = y;
+                        Blocks[x, y, z].worldZCoordinate = z;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -108,7 +124,8 @@ namespace Antymology.Terrain
 
         private void GenerateQueen()
         {
-            Vector3 spawnLocation = getAirBlock(RNG.Next(1, Blocks.GetLength(0) - 1), RNG.Next(1, Blocks.GetLength(2) - 1));
+            Vector3 spawnLocation = getAirBlockLoc(RNG.Next(1, Blocks.GetLength(0) - 1), RNG.Next(1, Blocks.GetLength(2) - 1));
+            spawnLocation.y -= 0.5f;
             GameObject queenie = Instantiate(queenPrefab, spawnLocation, Quaternion.identity);
             Queen_M queenScript = queenie.GetComponent<Queen_M>();
             queen = queenScript;
@@ -120,7 +137,8 @@ namespace Antymology.Terrain
             if (workers == null) workers = new List<Worker_M>();
             for (int i = 0; i < Number_Of_Workers; i++)
             {
-                Vector3 spawnLocation = getAirBlock(RNG.Next(1, Blocks.GetLength(0) - 1), RNG.Next(1, Blocks.GetLength(2) - 1));
+                Vector3 spawnLocation = getAirBlockLoc(RNG.Next(1, Blocks.GetLength(0) - 1), RNG.Next(1, Blocks.GetLength(2) - 1));
+                spawnLocation.y -= 0.5f;
                 GameObject workerBro = Instantiate(workerPrefab, spawnLocation, Quaternion.identity);
                 Worker_M workerScript = workerBro.GetComponent<Worker_M>();
                 workers.Add(workerScript);
@@ -134,7 +152,7 @@ namespace Antymology.Terrain
         /// <param name="xCoord"></param>
         /// <param name="zCoord"></param>
         /// <returns></returns>
-        public Vector3 getAirBlock(int xCoord, int zCoord)
+        public Vector3 getAirBlockLoc(int xCoord, int zCoord)
         {
             Vector3 r = new Vector3(0,0,0);
             for (int i = 1; i < Blocks.GetLength(1); i++)
@@ -148,6 +166,20 @@ namespace Antymology.Terrain
                 }
             }
             return r;
+        }
+
+        public AbstractBlock getAirBlock(int xCoord, int zCoord)
+        {
+            Vector3 r = new Vector3(0, 0, 0);
+            for (int i = 1; i < Blocks.GetLength(1); i++)
+            {
+                if (GetBlock(xCoord, i, zCoord).GetType().Name == "AirBlock")
+                {
+                    return GetBlock(xCoord, i, zCoord);
+                }
+            }
+            print("no air in this column");
+            return null;
         }
 
         #endregion
@@ -168,8 +200,13 @@ namespace Antymology.Terrain
                 WorldYCoordinate >= Blocks.GetLength(1) ||
                 WorldZCoordinate >= Blocks.GetLength(2)
             )
-                return new AirBlock();
-
+            {
+                AirBlock air = new AirBlock();
+                air.worldXCoordinate = (int)this.transform.position.x;
+                air.worldYCoordinate = (int)this.transform.position.y - 1 + 1;
+                air.worldZCoordinate = (int)this.transform.position.z;
+                return air;
+            }
             return Blocks[WorldXCoordinate, WorldYCoordinate, WorldZCoordinate];
         }
 
@@ -268,6 +305,8 @@ namespace Antymology.Terrain
                 ChunkZCoordinate * LocalZCoordinate
             ] = toSet;
 
+            
+
             SetChunkContainingBlockToUpdate
             (
                 ChunkXCoordinate * LocalXCoordinate,
@@ -314,7 +353,8 @@ namespace Antymology.Terrain
                     {
                         if (y <= stoneCeiling)
                         {
-                            Blocks[x, y, z] = new StoneBlock();
+                            StoneBlock b = new StoneBlock();
+                            Blocks[x, y, z] = b;
                         }
                         else if (y <= stoneCeiling + grassHeight)
                         {
@@ -455,7 +495,9 @@ namespace Antymology.Terrain
             if (updateZ - 1 >= 0)
                 Chunks[updateX, updateY, updateZ - 1].updateNeeded = true;
             if (updateX + 1 < Chunks.GetLength(2))
-                Chunks[updateX, updateY, updateZ + 1].updateNeeded = true;
+                try { Chunks[updateX, updateY, updateZ + 1].updateNeeded = true; }
+                catch { };
+                
         }
 
         #endregion
