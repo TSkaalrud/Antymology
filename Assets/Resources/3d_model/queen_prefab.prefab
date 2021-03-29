@@ -351,7 +351,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1500257684852205036}
   - component: {fileID: 1552909583944806344}
-  - component: {fileID: -5715901313328101943}
+  - component: {fileID: 8565524793162024675}
   m_Layer: 0
   m_Name: queen_prefab
   m_TagString: Untagged
@@ -394,7 +394,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-5715901313328101943
+--- !u!114 &8565524793162024675
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -403,9 +403,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1502215632078904800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ee98419358ac0e4a8fcb320e7d5bd16, type: 3}
+  m_Script: {fileID: 11500000, guid: eef867a302e33b54da69779808fa65a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Health: 0
+  isQueen: 1
+  legalMoves: 
 --- !u!1 &1502226350051244218
 GameObject:
   m_ObjectHideFlags: 0

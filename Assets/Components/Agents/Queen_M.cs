@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace Antymology.Terrain
 {
-    public class Queen_M : MonoBehaviour
+    public class Queen_M : Worker_M
     {
         #region fields
-        public float Health;
+        //public float Health;
+
 
 
         #endregion
@@ -25,8 +26,9 @@ namespace Antymology.Terrain
         // Update is called once per frame
         void Update()
         {
-            Health -= 0.1f;
-            if (Health <= 0) enabled = false;
+            starve();
+            brain();
+            buildNest();
         }
 
         private void OnEnable()
