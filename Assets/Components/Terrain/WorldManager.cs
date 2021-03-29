@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Antymology.Terrain
 {
@@ -51,8 +52,9 @@ namespace Antymology.Terrain
         /// The manager for the queen ant.
         /// </summary>
         public Queen_M queen;
-        
 
+        public Text NestCounter;
+        public int nestBlocks = 0;
 
         #endregion
 
@@ -94,6 +96,11 @@ namespace Antymology.Terrain
             Camera.main.transform.LookAt(new Vector3(Blocks.GetLength(0), 0, Blocks.GetLength(2)));
 
             GenerateAnts();
+        }
+
+        private void Update()
+        {
+            NestCounter.text = nestBlocks.ToString() + " Nest blocks.";
         }
 
         private void ApplyCoordinates()
